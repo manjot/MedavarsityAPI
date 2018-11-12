@@ -1,0 +1,737 @@
+<!DOCTYPE html>
+<!-- 
+Template Name: Metronic - Responsive Admin Dashboard Template build with Twitter Bootstrap 3.3.2
+Version: 3.7.0
+Author: KeenThemes
+Website: http://www.keenthemes.com/
+Contact: support@keenthemes.com
+Follow: www.twitter.com/keenthemes
+Like: www.facebook.com/keenthemes
+Purchase: http://themeforest.net/item/metronic-responsive-admin-dashboard-template/4021469?ref=keenthemes
+License: You must have a valid license purchased only from themeforest(the above link) in order to legally use the theme for your project.
+-->
+<!--[if IE 8]> <html lang="en" class="ie8 no-js"> <![endif]-->
+<!--[if IE 9]> <html lang="en" class="ie9 no-js"> <![endif]-->
+<!--[if !IE]><!-->
+<html lang="en" class="no-js">
+<!--<![endif]-->
+<!-- BEGIN HEAD -->
+<head>
+<meta charset="utf-8"/>
+<title>Medivarsity | Faculty Dashboard </title>
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta content="width=device-width, initial-scale=1" name="viewport"/>
+<meta content="" name="description"/>
+<meta content="" name="author"/>
+<!-- BEGIN GLOBAL MANDATORY STYLES -->
+<link href="http://fonts.googleapis.com/css?family=Open+Sans:400,300,600,700&subset=all" rel="stylesheet" type="text/css"/>
+<link href="assets/global/plugins/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css"/>
+<link href="assets/global/plugins/simple-line-icons/simple-line-icons.min.css" rel="stylesheet" type="text/css"/>
+<link href="assets/global/plugins/bootstrap/css/bootstrap.min.css" rel="stylesheet" type="text/css"/>
+<link href="assets/global/plugins/uniform/css/uniform.default.css" rel="stylesheet" type="text/css"/>
+<link href="assets/global/plugins/bootstrap-switch/css/bootstrap-switch.min.css" rel="stylesheet" type="text/css"/>
+<!-- END GLOBAL MANDATORY STYLES -->
+<!-- BEGIN PAGE LEVEL PLUGIN STYLES -->
+<link href="assets/global/plugins/bootstrap-daterangepicker/daterangepicker-bs3.css" rel="stylesheet" type="text/css"/>
+<link href="assets/global/plugins/fullcalendar/fullcalendar.min.css" rel="stylesheet" type="text/css"/>
+<link href="assets/global/plugins/jqvmap/jqvmap/jqvmap.css" rel="stylesheet" type="text/css"/>
+<!-- END PAGE LEVEL PLUGIN STYLES -->
+<!-- BEGIN PAGE STYLES -->
+<link href="assets/admin/pages/css/tasks.css" rel="stylesheet" type="text/css"/>
+<!-- END PAGE STYLES -->
+<!-- BEGIN THEME STYLES -->
+<!-- DOC: To use 'rounded corners' style just load 'components-rounded.css' stylesheet instead of 'components.css' in the below style tag -->
+<link href="assets/global/css/components.css" id="style_components" rel="stylesheet" type="text/css"/>
+<link href="assets/global/css/plugins.css" rel="stylesheet" type="text/css"/>
+<link href="assets/admin/layout2/css/layout.css" rel="stylesheet" type="text/css"/>
+<link href="assets/admin/layout2/css/themes/grey.css" rel="stylesheet" type="text/css" id="style_color"/>
+<link href="assets/admin/layout2/css/custom.css" rel="stylesheet" type="text/css"/>
+<!-- END THEME STYLES -->
+<link rel="shortcut icon" href="favicon.ico"/>
+</head>
+
+<style>
+
+input[type="file"] {
+  display: block;
+  
+  
+}
+.imageThumb {
+  max-height: 75px;
+
+  padding: 1px;
+  cursor: pointer;
+}
+.pip {
+  display: inline-block;
+  margin: 10px 10px 0 0;
+}
+.remove {
+margin-top:10px;
+  display: block;
+  background: #444;
+  border: 1px solid black;
+  color: white;
+  text-align: center;
+  cursor: pointer;
+}
+.remove:hover {
+  background: white;
+  color: black;
+}
+
+.hide_file {
+    position: absolute;
+    z-index: 1000;
+    opacity: 0;
+    cursor: pointer;
+    
+    
+}
+
+body{
+    font-family: 'Segoe UI';
+    font-size: 12pt;
+}
+
+header h1{
+    font-size:12pt;
+    color: #fff;
+    background-color: #1BA1E2;
+    padding: 20px;
+
+}
+article
+{
+    width: 80%;
+    margin:auto;
+    margin-top:10px;
+}
+
+
+.thumbnail{
+
+    height: 100px;
+    margin: 10px;    
+}
+</style>
+<!-- END HEAD -->
+<!-- BEGIN BODY -->
+<!-- DOC: Apply "page-header-fixed-mobile" and "page-footer-fixed-mobile" class to body element to force fixed header or footer in mobile devices -->
+<!-- DOC: Apply "page-sidebar-closed" class to the body and "page-sidebar-menu-closed" class to the sidebar menu element to hide the sidebar by default -->
+<!-- DOC: Apply "page-sidebar-hide" class to the body to make the sidebar completely hidden on toggle -->
+<!-- DOC: Apply "page-sidebar-closed-hide-logo" class to the body element to make the logo hidden on sidebar toggle -->
+<!-- DOC: Apply "page-sidebar-hide" class to body element to completely hide the sidebar on sidebar toggle -->
+<!-- DOC: Apply "page-sidebar-fixed" class to have fixed sidebar -->
+<!-- DOC: Apply "page-footer-fixed" class to the body element to have fixed footer -->
+<!-- DOC: Apply "page-sidebar-reversed" class to put the sidebar on the right side -->
+<!-- DOC: Apply "page-full-width" class to the body element to have full width page without the sidebar menu -->
+<body class="page-boxed page-header-fixed page-sidebar-closed-hide-logo page-container-bg-solid page-sidebar-closed-hide-logo">
+<!-- BEGIN HEADER -->
+<div class="page-header navbar navbar-fixed-top">
+	<!-- BEGIN HEADER INNER -->
+	<div class="page-header-inner container">
+		<!-- BEGIN LOGO -->
+		<div class="page-logo">
+			<a href="faculty.html" style="text-decoration:none">
+			<h3 style="color:white">Medivarsity</h3>
+			
+			<!--<img src="assets/admin/layout2/img/logo-default.png" alt="logo" class="logo-default"/>-->
+			</a>
+			
+			<!-- DOC: Remove the above "hide" to enable the sidebar toggler button on header -->
+			<!--<div class="menu-toggler sidebar-toggler">
+				
+			</div>-->
+		</div>
+		<!-- END LOGO -->
+		<!-- BEGIN RESPONSIVE MENU TOGGLER -->
+		<a href="javascript:;" class="menu-toggler responsive-toggler" data-toggle="collapse" data-target=".navbar-collapse">
+		</a>
+	
+		<div class="page-top">
+			<!-- BEGIN HEADER SEARCH BOX -->
+			<!-- DOC: Apply "search-form-expanded" right after the "search-form" class to have half expanded search box -->
+			<form class="search-form search-form-expanded" action="extra_search.html" method="GET">
+				<div class="input-group">
+					<input type="text" class="form-control" placeholder="Search..." name="query">
+					<span class="input-group-btn">
+					<a href="javascript:;" class="btn submit"><i class="icon-magnifier"></i></a>
+					</span>
+				</div>
+			</form>
+			<!-- END HEADER SEARCH BOX -->
+			<!-- BEGIN TOP NAVIGATION MENU -->
+			<div class="top-menu">
+				<ul class="nav navbar-nav pull-right">
+					<!-- BEGIN NOTIFICATION DROPDOWN -->
+					<!-- DOC: Apply "dropdown-dark" class after below "dropdown-extended" to change the dropdown styte -->
+					<li class="dropdown dropdown-extended dropdown-notification" id="header_notification_bar">
+						<a href="#">
+						<i class="icon-bell"></i>
+						<!--<span class="badge badge-default">
+						7 </span>-->
+						</a>
+				
+						</li>
+				
+					<li class="dropdown dropdown-user">
+						<a href="javascript:;" class="dropdown-toggle" data-toggle="dropdown" data-hover="dropdown" data-close-others="true">
+						<i class="icon-user"></i>
+						<!--<img alt="" class="img-circle" src="assets/admin/layout2/img/avatar3_small.jpg"/>-->
+						<span class="username username-hide-on-mobile">
+						Faculty </span>
+						<i class="fa fa-angle-down"></i>
+						</a>
+						<ul class="dropdown-menu dropdown-menu-default">
+							<li>
+								<a href="faculty_profile.html">
+								<i class="icon-user"></i> My Profile </a>
+							</li>
+						
+							<li class="divider">
+							</li>
+							<!--<li>
+								<a href="extra_lock.html">
+								<i class="icon-lock"></i> Lock Screen </a>
+							</li>-->
+							<li>
+								<a href="index1.html">
+								<i class="icon-key"></i> Log Out </a>
+							</li>
+						</ul>
+					</li>
+					<!-- END USER LOGIN DROPDOWN -->
+				</ul>
+			</div>
+			<!-- END TOP NAVIGATION MENU -->
+		</div>
+		<!-- END PAGE TOP -->
+	</div>
+	<!-- END HEADER INNER -->
+</div>
+<!-- END HEADER -->
+<div class="clearfix">
+</div>
+<!-- BEGIN CONTAINER -->
+<div class="container">
+	<div class="page-container">
+		<!-- BEGIN SIDEBAR -->
+		<div class="page-sidebar-wrapper">
+			<!-- DOC: Set data-auto-scroll="false" to disable the sidebar from auto scrolling/focusing -->
+			<!-- DOC: Change data-auto-speed="200" to adjust the sub menu slide up/down speed -->
+			<div class="page-sidebar navbar-collapse collapse">
+			
+				<ul class="page-sidebar-menu page-sidebar-menu-hover-submenu " data-keep-expanded="false" data-auto-scroll="true" data-slide-speed="200">
+					<li class="start active ">
+						<a href="faculty.html">
+						<i class="icon-home"></i>
+						<span class="title">Faculty Dashboard</span>
+						<span class="selected"></span>
+						</a>
+					</li>
+					<li>
+						<a href="f_all_student.html">
+					
+						<i class="icon-users"></i>
+						<span class="title">Subscribe Students</span>
+						<span class="arrow "></span>
+						</a>
+						
+					</li>
+					<li>
+						<a href="f_all_lecture.html">
+						<i class="icon-camcorder"></i>
+						<span class="title">All Lectures</span>
+						<span class="arrow "></span>
+						</a>
+					</li>
+					<li>
+						<a href="f_invoice.html">
+						<i class="icon-wallet"></i>
+						<span class="title">Invoice</span>
+						<span class="arrow "></span>
+						</a>
+					</li>
+					<li>
+						<a href="f_addpost.html">
+						<i class="icon-bell"></i>
+						<span class="title">Add Post</span>
+						<span class="arrow "></span>
+						</a>
+					</li>
+				
+				</ul>
+				<!-- END SIDEBAR MENU -->
+			</div>
+		</div>
+		<!-- END SIDEBAR -->
+		<!-- BEGIN CONTENT -->
+		<div class="page-content-wrapper">
+			<div class="page-content">
+				
+				<h3 class="page-title">
+				Welcome Faculty</h3>
+				<div class="page-bar">
+					<ul class="page-breadcrumb">
+						<li>
+							<i class="fa fa-home"></i>
+							<a href="faculty.html">Home</a>
+							<i class="fa fa-angle-right"></i>
+						</li>
+						<li>
+							<a href="#">Welcome Faculty</a>
+						</li>
+					</ul>
+					<div class="page-toolbar">
+					</div>
+				</div>
+				<!-- END PAGE HEADER-->
+				<!-- BEGIN PAGE CONTENT-->
+				<div class="row">
+					<div class="col-md-12">
+						<form class="form-horizontal form-row-seperated" action="#">
+							<div class="portlet light">
+								<div class="portlet-title">
+									<div class="caption">
+										<i class="icon-check font-green-sharp"></i>
+										<span class="caption-subject font-green-sharp bold uppercase">
+										Test </span>
+										
+									</div>
+									<div class="actions btn-set">
+										<a href="f_all_lecture.html"><button type="button" name="back" class="btn btn-default btn-circle"><i class="fa fa-angle-left"></i> Back</button></a>
+										<!--<button class="btn btn-default btn-circle "><i class="fa fa-reply"></i> Reset</button>
+										<button class="btn green-haze btn-circle"><i class="fa fa-check"></i> Save</button>-->
+										<button class="btn green-haze btn-circle"><i class="fa fa-check-circle"></i> Save & Continue</button>
+									</div>
+								</div>
+								
+								
+					 <div class="form-group">
+	                 <label class="col-md-2 control-label">Question: <span class="required">
+					 *</span>
+					  </label>
+					  <div class="col-md-10">
+					  <textarea class="form-control" name="product[description]"></textarea>
+					 </div>
+					 </div>
+													
+													
+													
+													
+								<div class="portlet-body">
+									<div class="tabbable">
+										<ul class="nav nav-tabs">
+											<li class="active">
+											
+												<a href="#tab_general" data-toggle="tab">
+												Text </a>
+											</li>
+											<!--<li>
+												<a href="#tab_meta" data-toggle="tab">
+												Meta </a>
+											</li>-->
+											<li>
+												<a href="#tab_images" data-toggle="tab">
+												Images </a>
+											</li>
+										</ul>
+										<div class="tab-content no-space">
+										
+										
+											<div class="tab-pane active" id="tab_general">
+												<div class="form-body">
+													
+													
+													<div class="form-group">
+													    <div class="col-md-8">
+														<label class="col-md-2 control-label">Option <span class="required">
+														</span>
+														</label>
+														<div class="col-md-6">
+													    <input class="form-control" name="product[short_description]" />
+														</div>
+													    </div>
+													</div>
+													<div class="form-group">
+													    <div class="col-md-8">
+														<label class="col-md-2 control-label">Option <span class="required">
+														</span>
+														</label>
+														<div class="col-md-6">
+														<input class="form-control" name="product[short_description]" />
+														</div>
+														</div>
+													</div>
+													
+													<div class="form-group">
+													    <div class="col-md-8">
+														<label class="col-md-2 control-label">Other Option</label>
+														<div class="col-md-6">
+														<div class="field_wrapper"></div>
+                                                        <a href="javascript:void(0);" class="add_button" onclick="myFunction()" title="Add field">
+													    <input type="button"  class="form-control btn green" name="field_name[]" value="Add Option" />
+														</a>
+														</div>
+                                                       </div>
+                                                    </div>
+												   	<div class="form-group">
+													    <div class="col-md-8">
+														<label class="col-md-2 control-label">Correct Answer <span class="required">
+														 </span>
+														</label>
+														<div class="col-md-6">
+													    <input class="form-control" name="product[short_description]" />
+														</div>
+														</div>
+													</div>
+												</div>
+											</div>
+										
+											<div class="tab-pane" id="tab_images">
+											
+											<div class="form-body">
+													
+													
+													<div class="form-group">
+													    <div class="col-md-8">
+														<label class="col-md-2 control-label">1</label>
+														<div class="col-md-4">
+														<img id="blah1" style="width:100px; height:100px; margin-top:10px;"  src="" alt=""/>
+														</div>
+														<div class="col-md-2">
+                                                        <input type="file" accept="image/*" id="imgInp1" onChange="myfunction(imgInp1,1)"/>
+                                                        </div>
+														<!-- <input   class="btn green" type="file" id="files"  />-->
+         												</div>
+													</div>
+													
+													<div class="form-group">
+													   <div class="col-md-8">
+													   <label class="col-md-2 control-label">2</label>
+                                                       <form id="form1" runat="server">
+													   <div class="col-md-4">
+													   <img id="blah2" style="width:100px; height:100px; margin-top:10px;" src="" alt="" />
+													   </div>
+													   <div class="col-md-2">
+                                                       <input type='file' id="imgInp2" onChange="myfunction(imgInp2,2)" />
+													   </div>
+                                                       </form>
+													   </div>
+													    <div class="col-md-2">           
+            <button type="button" class="btn btn-warning" name="add" id="addmore_btn"><i class="fa fa-plus"></i></button>
+            </div>
+          
+
+													</div>
+													<div class="col-md-12">                                          
+                                                    <div id="dynamictasks"></div>
+                      	         	                </div>
+
+													
+												
+												  
+												
+													
+													
+													<div class="form-group">
+														<label class="col-md-2 control-label">Correct Answer <span class="required">
+														 </span>
+														</label>
+														<div class="col-md-4">
+															<input class="form-control" name="product[short_description]" />
+															
+														</div>
+													</div>
+											</div>
+
+											
+											</div>
+										
+											<div class="tab-pane" id="tab_history">
+												<div class="table-container">
+													<table class="table table-striped table-bordered table-hover" id="datatable_history">
+													<thead>
+													<tr role="row" class="heading">
+														<th width="25%">
+															 Datetime
+														</th>
+														<th width="55%">
+															 Description
+														</th>
+														<th width="10%">
+															 Notification
+														</th>
+														<th width="10%">
+															 Actions
+														</th>
+													</tr>
+													<tr role="row" class="filter">
+														<td>
+															<div class="input-group date datetime-picker margin-bottom-5" data-date-format="dd/mm/yyyy hh:ii">
+																<input type="text" class="form-control form-filter input-sm" readonly name="product_history_date_from" placeholder="From">
+																<span class="input-group-btn">
+																<button class="btn btn-sm default date-set" type="button"><i class="fa fa-calendar"></i></button>
+																</span>
+															</div>
+															<div class="input-group date datetime-picker" data-date-format="dd/mm/yyyy hh:ii">
+																<input type="text" class="form-control form-filter input-sm" readonly name="product_history_date_to" placeholder="To">
+																<span class="input-group-btn">
+																<button class="btn btn-sm default date-set" type="button"><i class="fa fa-calendar"></i></button>
+																</span>
+															</div>
+														</td>
+														<td>
+															<input type="text" class="form-control form-filter input-sm" name="product_history_desc" placeholder="To"/>
+														</td>
+														<td>
+															<select name="product_history_notification" class="form-control form-filter input-sm">
+																<option value="">Select...</option>
+																<option value="pending">Pending</option>
+																<option value="notified">Notified</option>
+																<option value="failed">Failed</option>
+															</select>
+														</td>
+														<td>
+															<div class="margin-bottom-5">
+																<button class="btn btn-sm yellow filter-submit margin-bottom"><i class="fa fa-search"></i> Search</button>
+															</div>
+															<button class="btn btn-sm red filter-cancel"><i class="fa fa-times"></i> Reset</button>
+														</td>
+													</tr>
+													</thead>
+													<tbody>
+													</tbody>
+													</table>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</form>
+					</div>
+				</div>
+				<!-- END PAGE CONTENT-->
+			</div>
+		</div>
+		
+	</div>
+	<!-- END CONTAINER -->
+	<!-- BEGIN FOOTER -->
+	<div class="page-footer">
+		<div class="page-footer-inner">
+			 2014 &copy; Metronic by keenthemes.
+		</div>
+		<div class="scroll-to-top">
+			<i class="icon-arrow-up"></i>
+		</div>
+	</div>
+	<!-- END FOOTER -->
+</div>
+
+<script src="assets/global/plugins/jquery.min.js" type="text/javascript"></script>
+<script src="assets/global/plugins/jquery-migrate.min.js" type="text/javascript"></script>
+<!-- IMPORTANT! Load jquery-ui.min.js before bootstrap.min.js to fix bootstrap tooltip conflict with jquery ui tooltip -->
+<script src="assets/global/plugins/jquery-ui/jquery-ui.min.js" type="text/javascript"></script>
+<script src="assets/global/plugins/bootstrap/js/bootstrap.min.js" type="text/javascript"></script>
+<script src="assets/global/plugins/bootstrap-hover-dropdown/bootstrap-hover-dropdown.min.js" type="text/javascript"></script>
+<script src="assets/global/plugins/jquery-slimscroll/jquery.slimscroll.min.js" type="text/javascript"></script>
+<script src="assets/global/plugins/jquery.blockui.min.js" type="text/javascript"></script>
+<script src="assets/global/plugins/jquery.cokie.min.js" type="text/javascript"></script>
+<script src="assets/global/plugins/uniform/jquery.uniform.min.js" type="text/javascript"></script>
+<script src="assets/global/plugins/bootstrap-switch/js/bootstrap-switch.min.js" type="text/javascript"></script>
+<!-- END CORE PLUGINS -->
+<!-- BEGIN PAGE LEVEL PLUGINS -->
+<script type="text/javascript" src="assets/global/plugins/select2/select2.min.js"></script>
+<script type="text/javascript" src="assets/global/plugins/datatables/media/js/jquery.dataTables.min.js"></script>
+<script type="text/javascript" src="assets/global/plugins/datatables/plugins/bootstrap/dataTables.bootstrap.js"></script>
+<script type="text/javascript" src="assets/global/plugins/bootstrap-datepicker/js/bootstrap-datepicker.js"></script>
+<script type="text/javascript" src="assets/global/plugins/bootstrap-datetimepicker/js/bootstrap-datetimepicker.min.js"></script>
+<script src="assets/global/plugins/bootstrap-maxlength/bootstrap-maxlength.min.js" type="text/javascript"></script>
+<script src="assets/global/plugins/bootstrap-touchspin/bootstrap.touchspin.js" type="text/javascript"></script>
+<script type="text/javascript" src="assets/global/plugins/fancybox/source/jquery.fancybox.pack.js"></script>
+<script src="assets/global/plugins/plupload/js/plupload.full.min.js" type="text/javascript"></script>
+<!-- END PAGE LEVEL PLUGINS -->
+<!-- BEGIN PAGE LEVEL SCRIPTS -->
+<script src="assets/global/scripts/metronic.js" type="text/javascript"></script>
+<script src="assets/admin/layout2/scripts/layout.js" type="text/javascript"></script>
+<script src="assets/admin/layout2/scripts/demo.js" type="text/javascript"></script>
+<script src="assets/global/scripts/datatable.js"></script>
+<script src="assets/admin/pages/scripts/ecommerce-products-edit.js"></script>
+<!--<script src="https://ajax.aspnetcdn.com/ajax/jQuery/jquery-1.6.1.min.js"></script>-->
+
+<!-- END PAGE LEVEL SCRIPTS -->
+<script>
+        jQuery(document).ready(function() {    
+           Metronic.init(); // init metronic core components
+Layout.init(); // init current layout
+Demo.init(); // init demo features
+           EcommerceProductsEdit.init();
+        });
+    </script>
+	
+	<script type="text/javascript">
+$(document).ready(function(){
+    var maxField = 20; //Input fields increment limitation
+    
+    var wrapper = $('.field_wrapper'); //Input field wrapper
+	  var addButton = $('.add_button'); //Add button selector
+    var fieldHTML = '<label id="demo"></label><div> <input type="text" class="form-control" name="field_name[]" value="" style="width:90%" />&nbsp;&nbsp;<a href="javascript:void(0);" class="remove_button"><i class="fa fa-trash"></i></a></div>&nbsp;&nbsp;'; //New input field html 
+    var x = 1; //Initial field counter is 1
+    
+	
+	
+	
+    //Once add button is clicked
+    $(addButton).click(function(){
+        //Check maximum number of input fields
+        if(x < maxField){ 
+            x++; //Increment field counter
+            $(wrapper).append(fieldHTML); //Add field html
+        }
+    });
+    
+    //Once remove button is clicked
+    $(wrapper).on('click', '.remove_button', function(e){
+        e.preventDefault();
+        $(this).parent('div').remove(); //Remove field html
+        x--; //Decrement field counter
+    });
+});
+</script>
+
+<script>
+var seq=0;
+function myFunction() {
+seq=seq+1;
+    document.getElementById("demo").value = seq;
+}
+</script>
+
+<script>
+$(document).ready(function() {
+  if (window.File && window.FileList && window.FileReader) {
+    $("#files").on("change", function(e) {
+      var files = e.target.files,
+        filesLength = files.length;
+      for (var i = 0; i < filesLength; i++) {
+        var f = files[i]
+        var fileReader = new FileReader();
+        fileReader.onload = (function(e) {
+          var file = e.target;
+          $("<div class=\"pip\">" +
+            "<img class=\"imageThumb\" src=\"" + e.target.result + "\" title=\"" + file.name + "\" />" +
+            "<br><div class=\"remove\">Delete</div>" +
+            "</div>").insertAfter("#files");
+          $(".remove").click(function(){
+            $(this).parent(".pip").remove();
+          });
+          
+          // Old code here
+          /*$("<img></img>", {
+            class: "imageThumb",
+            src: e.target.result,
+            title: file.name + " | Click to remove"
+          }).insertAfter("#files").click(function(){$(this).remove();});*/
+          
+        });
+        fileReader.readAsDataURL(f);
+      }
+    });
+  } else {
+    alert("Your browser doesn't support to File API")
+  }
+});
+</script>
+
+<script>
+
+
+ function showMyImage(fileInput) {
+        var files = fileInput.files;
+        for (var i = 0; i < files.length; i++) {           
+            var file = files[i];
+            var imageType = /image.*/;     
+            if (!file.type.match(imageType)) {
+                continue;
+            }           
+            var img=document.getElementById("thumbnil");            
+            img.file = file;    
+            var reader = new FileReader();
+            reader.onload = (function(aImg) { 
+                return function(e) { 
+                    aImg.src = e.target.result; 
+                }; 
+            })(img);
+            reader.readAsDataURL(file);
+        }    
+    }
+
+</script>
+
+<script>
+function readURL(input) {
+
+  if (input.files && input.files[0]) {
+    var reader = new FileReader();
+
+    reader.onload = function(e) {
+      $('#blah').attr('src', e.target.result);
+    }
+
+    reader.readAsDataURL(input.files[0]);
+  }
+}
+
+$("#imgInp").change(function() {
+  readURL(this);
+});
+</script>
+<script type="text/javascript">
+         $(document).ready(function(){
+ var i=2;
+
+
+
+ $('#addmore_btn').click(function(){
+
+ i++;
+ 
+ $('#dynamictasks').append('<div id="row'+i+'" class="row"><div class="form-group"><div class="col-md-8"><label class="col-md-2 control-label">'+i+'</label><form id="form1" runat="server"><div class="col-md-4"><img id="blah'
+ 	+i+'" style="width:100px; height:100px; margin-top:10px;" src="" alt="" /></div><div class="col-md-2"><input type="file" id="imgInp'+i+'" onChange="myfunction(imgInp'+i+','+i+')"/></div></form></div><div class="col-md-2"><button type="button" name="add" class="btn_remove  btn btn-danger" id="'+i+'"><i class="fa fa-close"></i></button></div></div>');
+ 
+
+ });
+
+ $(document).on('click', '.btn_remove', function(){
+ var button_id = $(this).attr("id");
+ $('#row'+button_id+'').remove();
+ });
+
+ 
+ 
+});
+
+    function myfunction(input,id){       
+    if (input.files && input.files[0]) {
+    var reader = new FileReader();
+    reader.onload = function(e) {
+      $('#blah'+id).attr('src', e.target.result);
+    }
+   reader.readAsDataURL(input.files[0]);
+  }         
+};
+
+
+      </script> 
+
+
+
+
+<!-- END JAVASCRIPTS -->
+</body>
+<!-- END BODY -->
+</html>
