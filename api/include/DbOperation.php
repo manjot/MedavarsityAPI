@@ -20,6 +20,15 @@ class DbOperation
         return $countries;
     }
 
+     //Method to fetch all subjects from database
+    public function getAllSubject(){
+        $stmt = $this->con->prepare("SELECT * FROM subject_master");
+        $stmt->execute();
+        $subjects = $stmt->get_result();
+        $stmt->close();
+        return $subjects;
+    }
+
        //Method to fetch all states according to country from database
     public function getAllStateList($country_id){
         $stmt = $this->con->prepare("SELECT * FROM states WHERE country_id=?");
@@ -202,7 +211,16 @@ $subject = 'medivarsity - Login Mail';
         } 
     }
       //Method to login user
-    public function loginstudent($username,$password){
+    public function loginstudent($username,$password,$login_type,$social_id,$device_type,$device_id){
+        if($login_type == 1){
+        $status = 1;
+        $password = md5(SALT . $password);
+        $stmt = $this->con->prepare("SELECT student_id,name,email,contact_no,status from medi_registered_students WHERE social_id = ? AND status = ?");
+        $stmt->bind_param("ss", $social_id,$status);
+        $stmt->execute();
+        $userdetails = $stmt->get_result()->fetch_assoc();
+        $stmt->close();
+        }else if($login_type == 0){
         $status = 1;
         $password = md5(SALT . $password);
         $stmt = $this->con->prepare("SELECT student_id,name,email,contact_no,status from medi_registered_students WHERE email = ? OR contact_no = ? AND password = ? AND status = ?");
@@ -210,7 +228,25 @@ $subject = 'medivarsity - Login Mail';
         $stmt->execute();
         $userdetails = $stmt->get_result()->fetch_assoc();
         $stmt->close();
+        }
         if(!empty($userdetails)){
+
+        $stmt = $this->con->prepare("SELECT * from device_details WHERE student_id = ?");
+        $stmt->bind_param("s", $userdetails['student_id']);
+        $stmt->execute();
+        $user = $stmt->get_result()->fetch_assoc();  
+        if(!empty($user)){
+        $stmt = $this->con->prepare("UPDATE device_details SET device_id = ? WHERE device_type = ?");
+        $stmt->bind_param("ss", $device_id,$device_type);
+        $result = $stmt->execute();
+        $stmt->close();
+        }else{
+        $stmt = $this->con->prepare("INSERT INTO device_details(student_id,device_id,device_type) values(?,?,?)");
+        $stmt->bind_param("sss", $userdetails['student_id'],$device_id,$device_type);
+        $result = $stmt->execute();
+        $stmt->close();
+        }
+
 
         $stmt = $this->con->prepare("SELECT * from authentication_token WHERE student_id = ?");
         $stmt->bind_param("s", $userdetails['student_id']);
@@ -226,13 +262,15 @@ $subject = 'medivarsity - Login Mail';
         $authtoken = $auth['auth_token'];
         }
         return array($userdetails,$authtoken);
+        }else{
+        return array(1);  
         }
     }
 
      //Method to login user
     public function forgotpassword($email){
         $status = 1;
-        $stmt = $this->con->prepare("SELECT * from member WHERE email = ? AND status = ?");
+        $stmt = $this->con->prepare("SELECT * from medi_registered_students WHERE email = ? AND status = ?");
         $stmt->bind_param("ss", $email,$status);
         $stmt->execute();
         $userdetails = $stmt->get_result()->fetch_assoc();
@@ -243,14 +281,14 @@ $subject = 'medivarsity - Login Mail';
         $bodymsg = 'Your password for your email id is <strong>'.$usrpass.'</strong>
 
 Regards, 
-Team SoOLegal';
-            $subject = 'GRIP - Forgot Password';
-            $statusmail = $this->SendmailOtp($otp=null,$email,$contact_num=null,$userdetails['first_name'],$bodymsg,$subject);
+Team Medivarsity';
+            $subject = 'mediversity - Forgot Password';
+            $statusmail = $this->SendmailOtp($otp=null,$email,$contact_num=null,$userdetails['name'],$bodymsg,$subject);
             
         }
         if($statusmail){
-            $stmt = $this->con->prepare("UPDATE member SET password = ? WHERE member_id = ?");
-            $stmt->bind_param("ss", $password,$userdetails['member_id']);
+            $stmt = $this->con->prepare("UPDATE medi_registered_students SET password = ? WHERE student_id = ?");
+            $stmt->bind_param("ss", $password,$userdetails['student_id']);
             $result = $stmt->execute();
             $stmt->close();
             
@@ -261,7 +299,261 @@ Team SoOLegal';
             return 0;    
             }
     }
-    
+
+      //Method to home
+  /*  public function home($authtoken){
+        $response = array();
+        $status = 1;
+        $auth = $this->istokenexists($authtoken);
+        if (!empty($auth)) { 
+        $student_id = $auth['student_id'];
+
+        $stmt = $this->con->prepare("SELECT * from intro_url");
+        $stmt->execute();
+        $intro = $stmt->get_result()->fetch_assoc(); 
+        $introurl = $intro['intro_url'];
+        $response['introurl'] = $introurl;
+        $stmt = $this->con->prepare("SELECT * from daily_updates WHERE status = ?");
+        $stmt->bind_param("s", $status);
+        $stmt->execute();
+        $dailyupdates = $stmt->get_result(); 
+        $response['subjects']['dailyupdates'] = array();
+        while($row = $dailyupdates->fetch_assoc()){
+        $temp = array();
+        $temp['title'] = $row['title'];
+        $temp['url'] = $row['url'];
+        array_push($response['subjects']['dailyupdates'],$temp);
+        }
+
+        $stmt = $this->con->prepare("SELECT sm.id as subject_id,sm.subject_name, sd.subject_description, sd.subject_features from subject_master as sm 
+        LEFT JOIN subject_details as sd  ON sd.subject_id = sm.id ");
+        $stmt->execute();
+        $subjectlist = $stmt->get_result();
+        $subject = array();
+        while($row = $subjectlist->fetch_assoc()){
+        $temp = array();
+        $temp['subject_id'] = $row['subject_id'];
+        $temp['subject_name'] = $row['subject_name'];
+        $temp['subject_description'] = $row['subject_description'];
+        $temp['subject_features'] = $row['subject_features'];
+        array_push($subject,$temp);
+
+        }
+       
+        foreach($subject as $element){
+        $videotype = 0;
+        $status = 1;
+        $stmt = $this->con->prepare("SELECT * from subscription_details WHERE subject_id = ? AND student_id = ? AND status = ?");
+        $stmt->bind_param("sss", $element['subject_id'],$student_id,$status);
+        $stmt->execute();
+        $subscription = $stmt->get_result();
+        if(!empty($subscription)){
+        $subs = 'subscribed';
+        $videotype = 1;    
+        }else{
+        $subs = 'subscribe';
+        $videotype = 0;    
+        }
+        $stmt = $this->con->prepare("SELECT * from lecture_videos WHERE subject_id = ? AND video_type = ? AND status = ?");
+        $stmt->bind_param("sss", $element['subject_id'],$videotype,$status);
+        $stmt->execute();
+        $videolist = $stmt->get_result();
+
+        $response['subjects'][$element['subject_name']] = array();
+        while($row = $videolist->fetch_assoc()){
+        $temp = array();
+        $temp['video_url'] = $row['video_url'];
+        $temp['video_image_url'] = $row['video_image_url'];
+        $temp['video_type'] = $row['video_type'];
+        array_push($response['subjects'][$element['subject_name']],$temp);
+        }
+        }
+        return array(0,$response);
+        }
+        else{
+            return array(1);
+            }
+       
+       
+    }*/
+
+ 
+public function home($authtoken){
+        $response = array();
+        $status = 1;
+        $auth = $this->istokenexists($authtoken);
+        if (!empty($auth)) { 
+        $student_id = $auth['student_id'];
+
+        $stmt = $this->con->prepare("SELECT * from intro_url");
+        $stmt->execute();
+        $intro = $stmt->get_result()->fetch_assoc(); 
+        $introurl = $intro['intro_url'];
+        $response['introurl'] = $introurl;
+        $stmt = $this->con->prepare("SELECT * from daily_updates WHERE status = ?");
+        $stmt->bind_param("s", $status);
+        $stmt->execute();
+        $dailyupdates = $stmt->get_result(); 
+        $response['dailyupdates'] = array();
+        while($row = $dailyupdates->fetch_assoc()){
+        $temp = array();
+        $temp['title'] = $row['title'];
+        $temp['url'] = $row['url'];
+        array_push($response['dailyupdates'],$temp);
+        }
+        
+
+        //subjects
+        $stmt = $this->con->prepare("SELECT sm.id as subject_id,sm.subject_name, sd.subject_description, sd.subject_features from subject_master as sm 
+        LEFT JOIN subject_details as sd  ON sd.subject_id = sm.id ");
+        $stmt->execute();
+        $subjectlist = $stmt->get_result();
+        $subject = array();
+        $subjects = mysqli_fetch_all ($subjectlist, MYSQLI_ASSOC);
+       
+       
+        foreach($subjects as $element){
+        $status = 1;        
+        $stmt = $this->con->prepare("SELECT * from subscription_details WHERE subject_id = ? AND student_id = ? AND status = ?");
+        $stmt->bind_param("sss", $element['subject_id'],$student_id,$status);
+        $stmt->execute();
+        $subscription = $stmt->get_result()->fetch_assoc();
+        if(!empty($subscription)){
+        $subs = 1;
+        $videotype = 1;    
+        }else{
+        $subs = 0;
+        $videotype = 0;    
+        }
+        $stmt = $this->con->prepare("SELECT * from lecture_videos WHERE subject_id = ? AND video_type = ? AND status = ? LIMIT 10");
+        $stmt->bind_param("sss", $element['subject_id'],$videotype,$status);
+        $stmt->execute();
+        $videolist = $stmt->get_result();
+        $videos['videos'] = mysqli_fetch_all ($videolist, MYSQLI_ASSOC);
+        $subject = array('subjectname' => $element['subject_name']);
+        $subscription = array('subscription' => $subs);
+        $response['subjects'][] = array_merge($subject,$subscription,$videos);
+        }
+        return array(0,$response);
+        }
+        else{
+            return array(1);
+            }
+       
+       
+    }
+
+
+    public function lectureslist($authtoken,$topic_id){
+        $status = 1;
+        $auth = $this->istokenexists($authtoken);
+        if (!empty($auth)) { 
+        $student_id = $auth['student_id'];
+       
+        $status = 1;        
+        $stmt = $this->con->prepare("SELECT * from subscription_details WHERE subject_id = ? AND student_id = ? AND status = ?");
+        $stmt->bind_param("sss",$topic_id,$student_id,$status);
+        $stmt->execute();
+        $subscription = $stmt->get_result()->fetch_assoc();
+        if(!empty($subscription)){
+        $videotype = 1;
+        $stmt = $this->con->prepare("SELECT video_title,id as video_id from lecture_videos WHERE subject_id = ? AND video_type = ? AND status = ? LIMIT 10");
+        $stmt->bind_param("sss",$topic_id,$videotype,$status);
+        $stmt->execute();
+        $videolist = $stmt->get_result();
+        $videos = mysqli_fetch_all ($videolist, MYSQLI_ASSOC);
+        return array(0,$videos);
+        }else{
+        return array(2);
+        }
+        }
+        else{
+            return array(1);
+            }
+       
+       
+    }
+
+    public function Topicdetails($authtoken,$topic_id){
+        $response = array();
+        $status = 1;
+        $auth = $this->istokenexists($authtoken);
+        if (!empty($auth)) { 
+        $student_id = $auth['student_id'];  
+
+        $status = 1;        
+        $stmt = $this->con->prepare("SELECT * from subscription_details WHERE subject_id = ? AND student_id = ? AND status = ?");
+        $stmt->bind_param("sss",$topic_id,$student_id,$status);
+        $stmt->execute();
+        $subscription = $stmt->get_result()->fetch_assoc();
+        if(!empty($subscription)){
+        $stmt = $this->con->prepare("SELECT * from subject_details WHERE subject_id = ?");
+        $stmt->bind_param("s",$topic_id);
+        $stmt->execute();
+        $aboutsubject = $stmt->get_result();
+        $about = mysqli_fetch_all ($aboutsubject, MYSQLI_ASSOC);
+        foreach($about as $about);
+        $subjectdetails['subjectdetails'] = array('subject_description' => $about['subject_description'],
+        'subject_features' => $about['subject_features']
+        );
+       
+
+        $videotype = 1;
+        $stmt = $this->con->prepare("SELECT * from lecture_videos WHERE subject_id = ? AND video_type = ? AND status = ?");
+        $stmt->bind_param("sss",$topic_id,$videotype,$status);
+        $stmt->execute();
+        $videolist = $stmt->get_result();
+        $videos['videos'] = mysqli_fetch_all ($videolist, MYSQLI_ASSOC);
+
+
+        $stmt = $this->con->prepare("SELECT rv.review,rv.rating,lv.video_title,mr.name as reviwername,mr.email as revieweremail,mr.image_url as reviwerimageurl from reviews as rv 
+        LEFT JOIN lecture_videos as lv  ON lv.id = rv.video_id 
+        LEFT JOIN medi_registered_students as mr ON mr.student_id = rv.student_id 
+        WHERE rv.status = 1 AND rv.subject_id = ? ORDER BY rv.id DESC");
+        $stmt->bind_param("s", $topic_id);
+        $stmt->execute();
+        $reviewlist = $stmt->get_result();
+        $reviews['reviews'] = mysqli_fetch_all ($reviewlist, MYSQLI_ASSOC);
+
+        $stmt = $this->con->prepare("SELECT id as test_id,test_name from test WHERE subject_id = ? AND status = ?");
+        $stmt->bind_param("ss",$topic_id,$status);
+        $stmt->execute();
+        $testlist = $stmt->get_result();
+        $test['test'] = mysqli_fetch_all ($testlist, MYSQLI_ASSOC);
+
+        $response = array_merge($subjectdetails,$videos,$reviews,$test);
+        return array(0,$response);
+        }else{
+        return array(2);
+        }
+        }
+        else{
+            return array(1);
+            }
+       
+       
+    }
+
+
+      public function addreview($authtoken,$video_id,$topic_id,$review,$rating){
+        $response = array();
+        $status = 1;
+        $auth = $this->istokenexists($authtoken);
+        if (!empty($auth)) { 
+        $student_id = $auth['student_id'];  
+        $status = 1;   
+
+        $stmt = $this->con->prepare("INSERT INTO reviews(video_id,subject_id,student_id,review,rating,status) values($video_id,$topic_id,$student_id,'".$review."',$rating,$status)");
+        $result = $stmt->execute();
+        $stmt->close();
+        return array(0);
+        }
+        else{
+            return array(1);
+            }
+       
+       
+    }
     
     
      //Method to update userdata
@@ -622,7 +914,18 @@ LEFT JOIN `category_description` as `cd2` ON `cp`.`category_id` = `cd2`.`categor
         $getresult = $stmt->get_result();
         return $getresult->num_rows;
     }
- //*********************************Common Functions ***********************//   
+ //*********************************Common Functions ***********************//  
+
+   //Method to check the auth token exist or not
+    private function istokenExists($authtoken) {
+        $stmt = $this->con->prepare("SELECT * from authentication_token WHERE auth_token = ?");
+        $stmt->bind_param("s", $authtoken);
+        $stmt->execute();
+        $authexists = $stmt->get_result()->fetch_assoc();
+        $stmt->close();
+        return $authexists;
+    }
+
      //Method to check the user email or contact number already exist or not
     private function isUserExistsActive($email,$contact_num) {
         $status = 1;

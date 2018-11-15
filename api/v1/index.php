@@ -76,7 +76,7 @@ function utf8ize($d) {
 
 
 /* *
- * URL: http://localhost/gripproject/v1/countries
+ * URL: http://localhost/api/v1/CollegeList
  * Parameters: none
  * Authorization: Put API Key in Request Header
  * Method: GET
@@ -85,71 +85,54 @@ $app->get('/CollegeList', function() use ($app){
     $db = new DbOperation();
     $result = $db->getAllCollege();
     $response = array();
-    $response['error'] = false;
-    $response['status'] = 1;
-    $response['colleges'] = array();
+    $response['Error'] = false;
+    $response['Status'] = 1;
+    $response['Payload'] = array();
 
     while($row = $result->fetch_assoc()){
         $temp = array();
         $temp['id'] = $row['id'];
         $temp['college_name'] = $row['college_name'];
-        array_push($response['colleges'],$temp);
+        array_push($response['Payload'],$temp);
     }
 
     echoResponse(200,$response);
 });
 
 
-/* *
- * URL: http://localhost/gripproject/v1/states
+  /* *
+
+  /* *
+ * URL: http://localhost/api/v1/SubjectList
  * Parameters: none
  * Authorization: Put API Key in Request Header
  * Method: GET
  * */
-$app->get('/StateList/:id', function($country_id) use ($app){
+$app->get('/SubjectList', function() use ($app){
     $db = new DbOperation();
-    $result = $db->getAllStateList($country_id);
+    $result = $db->getAllSubject();
     $response = array();
-    $response['error'] = false;
-    $response['states'] = array();
+    $response['Error'] = false;
+    $response['Status'] = 1;
+    $response['Payload'] = array();
 
     while($row = $result->fetch_assoc()){
         $temp = array();
         $temp['id'] = $row['id'];
-        $temp['name'] = $row['name'];
-        array_push($response['states'],$temp);
+        $temp['subject_name'] = $row['subject_name'];
+        array_push($response['Payload'],$temp);
     }
 
     echoResponse(200,$response);
 });
 
-  /* *
- * URL: http://localhost/gripproject/v1/cities
- * Parameters: none
- * Authorization: Put API Key in Request Header
- * Method: GET
- * */
-  $app->get('/CityList/:id', function($state_id) use ($app){
-    $db = new DbOperation();
-    $result = $db->getAllCityList($state_id);
-    $response = array();
-    $response['error'] = false;
-    $response['cities'] = array();
 
-    while($row = $result->fetch_assoc()){
-      $temp = array();
-      $temp['id'] = $row['id'];
-      $temp['name'] = $row['name'];
-      array_push($response['cities'],$temp);
 
-    }
-    
-    echoResponse(200,$response);
-  });
+  
 
   /* *
- * URL: http://localhost/api/v1/RegisterUser
- * Parameters: name, username, password
+ * URL: http://localhost/api/v1/RegisterStudent
+ * Parameters: name, email,contact_num,password,college,year
  * Method: POST
  * */
 $app->post('/RegisterStudent', function () use ($app) {
@@ -169,25 +152,25 @@ $app->post('/RegisterStudent', function () use ($app) {
     $result = $res[0];
     if ($result == 0) {
 
-        $response["error"] = false;
-        $response["status"] = 1;
-        $response["message"] = "Otp successfully sent";
-        $response["student_id"] = $res[1];
+        $response["Error"] = false;
+        $response["Status"] = 1;
+        $response["Message"] = "Otp successfully sent";
+        $response["Payload"] = $res[1];
         echoResponse(201, $response);
     } else if ($result == 1) {
-        $response["error"] = true;
-        $response["status"] = 1;
-        $response["message"] = "Otp successfully sent to your number";
+        $response["Error"] = true;
+        $response["Status"] = 1;
+        $response["Message"] = "Otp successfully sent to your number";
         echoResponse(200, $response);
     } else if ($result == 2) {
-        $response["error"] = true;
-        $response["status"] = 0;
-        $response["message"] = "Sorry, email already existed";
+        $response["Error"] = true;
+        $response["Status"] = 0;
+        $response["Message"] = "Sorry, email already existed";
         echoResponse(200, $response);
     } else if ($result == 3) {
-        $response["error"] = true;
-        $response["status"] = 0;
-        $response["message"] = "Sorry, contact number already existed";
+        $response["Error"] = true;
+        $response["Status"] = 0;
+        $response["Message"] = "Sorry, contact number already existed";
         echoResponse(200, $response);
     }
 });
@@ -205,22 +188,22 @@ $app->post('/Resendotp', function () use ($app) {
     $res = $db->resendotp($student_id);
     if ($res == 0) {
 
-        $response["error"] = false;
-        $response["status"] = 1;
-        $response["message"] = "otp successfully sent";
+        $response["Error"] = false;
+        $response["Status"] = 1;
+        $response["Message"] = "otp successfully sent";
         echoResponse(201, $response);
     } else{
 
-        $response["error"] = true;
-        $response["status"] = 0;
-        $response["message"] = "Sorry, otp not sent";
+        $response["Error"] = true;
+        $response["Status"] = 0;
+        $response["Message"] = "Sorry, otp not sent";
         echoResponse(201, $response);
     }
 });
 
 /* *
- * URL: http://localhost/gripproject/v1/Verifyotp
- * Parameters: name, username, password
+ * URL: http://localhost/api/v1/Verifyotp
+ * Parameters: student_id, otp
  * Method: POST
  * */
 $app->post('/Verifyotp', function () use ($app) {
@@ -232,39 +215,43 @@ $app->post('/Verifyotp', function () use ($app) {
     $res = $db->verifyotp($student_id,$otp);
     if ($res[0] == 0) {
 
-        $response["error"] = false;
-        $response["status"] = 1;
-        $response["message"] = "student successfully activate";
-        $response['data'] = $res[1];
+        $response["Error"] = false;
+        $response["Status"] = 1;
+        $response["Message"] = "student successfully activate";
+        $response['Payload'] = $res[1];
         echoResponse(201, $response);
     }else if ($res[0] == 3) {
 
-        $response["error"] = true;
-        $response["status"] = 0;
-        $response["message"] = "otp doesnot match";
+        $response["Error"] = true;
+        $response["Status"] = 0;
+        $response["Message"] = "otp doesnot match";
         echoResponse(201, $response);
     } else{
 
-        $response["error"] = true;
-        $response["status"] = 0;
-        $response["message"] = "student not activate";
+        $response["Error"] = true;
+        $response["Status"] = 0;
+        $response["Message"] = "student not activate";
         echoResponse(201, $response);
     }
 });
 
 /* *
- * URL: http://localhost/gripproject/v1/LoginUser
- * Parameters: name, username, password
+ * URL: http://localhost/api/v1/LoginStudent
+ * Parameters: username, password, login_type, device_type, device_id
  * Method: POST
  * */
 $app->post('/LoginStudent', function () use ($app) {
-    verifyRequiredParams(array('username','password'));
+    verifyRequiredParams(array('username','password','login_type','device_type','device_id'));
     $response = array();
     $username = $app->request->post('username');
     $password = $app->request->post('password');
+    $login_type = $app->request->post('login_type');
+    $social_id = $app->request->post('social_id');
+    $device_type = $app->request->post('device_type');
+    $device_id = $app->request->post('device_id');
     $db = new DbOperation();
-    $result = $db->loginstudent($username, $password);
-    if (!empty($result)) {
+    $result = $db->loginstudent($username, $password,$login_type,$social_id,$device_type,$device_id);
+    if (!empty($result[1])) {
 
         $response["Error"] = false;
         $response["Status"] = 1;
@@ -272,7 +259,7 @@ $app->post('/LoginStudent', function () use ($app) {
         $response["Payload"] = $result[0];
         $response["Authtoken"] = $result[1];
         echoResponse(201, $response);
-    } else {
+    } else if($result[0] == 1) {
         $response["Error"] = true;
         $response["Status"] = 0;
         $response["Message"] = "Not a valid user";
@@ -282,8 +269,8 @@ $app->post('/LoginStudent', function () use ($app) {
 
 
 /* *
- * URL: http://localhost/gripproject/v1/LoginUser
- * Parameters: name, username, password
+ * URL: http://localhost/api/v1/Forgotpassword
+ * Parameters: email
  * Method: POST
  * */
 $app->post('/Forgotpassword', function () use ($app) {
@@ -293,15 +280,135 @@ $app->post('/Forgotpassword', function () use ($app) {
     $db = new DbOperation();
     $result = $db->forgotpassword($email);
     if ($result == 1) {
-        $response["error"] = false;
-        $response["message"] = "You password sent to your email id successfully";
-        $response["user_id"] = $result;
+        $response["Error"] = false;
+        $response["Status"] = 1;
+        $response["Message"] = "You password sent to your email id successfully";
         echoResponse(201, $response);
     } else {
-        $response["error"] = true;
-        $response["message"] = "Not a valid email id";
+        $response["Error"] = true;
+        $response["Status"] = 0;
+        $response["Message"] = "Not a valid email id";
         echoResponse(200, $response);
     } 
+});
+
+/* *
+ * URL: http://localhost/api/v1/Home
+ * Parameters: authtoken
+ * Method: POST
+ * */
+$app->post('/Home', function () use ($app) {
+    verifyRequiredParams(array('authtoken'));
+    $response = array();
+    $authtoken = $app->request->post('authtoken');
+    $db = new DbOperation();
+    $res = $db->home($authtoken);
+    $result = $res[0];
+    if ($result == 0) {
+        $response["Error"] = false;
+        $response["Status"] = 1;
+        $response["Message"] = "Auth token successfully matched";
+        $response["Payload"] = $res[1];
+        echoResponse(201, $response);
+    } else if ($result == 1) {
+        $response["Error"] = true;
+        $response["Status"] = 0;
+        $response["Message"] = "Auth token doesnot exist";
+        echoResponse(200, $response);
+    } 
+});
+
+ /* *
+ * URL: http://localhost/api/v1/Lectureslist
+ * Parameters: authtoken, topic_id
+ * Method: POST
+ * */
+$app->post('/Lectureslist', function () use ($app) {
+    verifyRequiredParams(array('authtoken', 'topic_id'));
+    $response = array();
+    $authtoken = $app->request->post('authtoken');
+    $topic_id = $app->request->post('topic_id');
+    $db = new DbOperation();
+    $res = $db->lectureslist($authtoken, $topic_id);
+    $result = $res[0];
+    if ($result == 0) {
+        $response["Error"] = false;
+        $response["Status"] = 1;
+        $response["Message"] = "Auth token successfully matched";
+        $response["Payload"] = $res[1];
+        echoResponse(201, $response);
+    } else if ($result == 1) {
+        $response["Error"] = true;
+        $response["Status"] = 0;
+        $response["Message"] = "Auth token not matched";
+        echoResponse(200, $response);
+    } else if ($result == 2) {
+        $response["Error"] = true;
+        $response["Status"] = 0;
+        $response["Message"] = "Student not subscribed the subject";
+        echoResponse(200, $response);
+    } 
+});
+
+ /* *
+ * URL: http://localhost/api/v1/Topicdetails
+ * Parameters: authtoken, topic_id
+ * Method: POST
+ * */
+$app->post('/Topicdetails', function () use ($app) {
+    verifyRequiredParams(array('authtoken', 'topic_id'));
+    $response = array();
+    $authtoken = $app->request->post('authtoken');
+    $topic_id = $app->request->post('topic_id');
+    $db = new DbOperation();
+    $res = $db->topicdetails($authtoken, $topic_id);
+    $result = $res[0];
+    if ($result == 0) {
+        $response["Error"] = false;
+        $response["Status"] = 1;
+        $response["Message"] = "Auth token successfully matched";
+        $response["Payload"] = $res[1];
+        echoResponse(201, $response);
+    } else if ($result == 1) {
+        $response["Error"] = true;
+        $response["Status"] = 0;
+        $response["Message"] = "Auth token not matched";
+        echoResponse(200, $response);
+    } else if ($result == 2) {
+        $response["Error"] = true;
+        $response["Status"] = 0;
+        $response["Message"] = "Student not subscribed the subject";
+        echoResponse(200, $response);
+    } 
+});
+
+/* *
+ * URL: http://localhost/api/v1/AddReview
+ * Parameters: 'authtoken', 'video_id','topic_id','review','rating'
+ * Method: POST
+ * */
+$app->post('/AddReview', function () use ($app) {
+    verifyRequiredParams(array('authtoken', 'video_id','topic_id','review','rating'));
+    $response = array();
+    $authtoken = $app->request->post('authtoken');
+    $videoid = $app->request->post('video_id');
+    $topic_id = $app->request->post('topic_id');
+    $review = $app->request->post('review');
+    $rating = $app->request->post('rating');
+    $db = new DbOperation();
+    $res = $db->addreview($authtoken,$videoid,$topic_id,$review,$rating);
+    $result = $res[0];
+    if ($result == 0) {
+        $response["Error"] = false;
+        $response["Status"] = 1;
+        $response["Message"] = "Review added successfully";
+        echoResponse(201, $response);
+    } else if ($result == 1) {
+        $response["Error"] = true;
+        $response["Status"] = 0;
+        $response["Message"] = "Auth token not matched";
+        echoResponse(200, $response);
+    }
 });
 
 /* *
