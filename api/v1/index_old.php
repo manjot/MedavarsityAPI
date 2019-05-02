@@ -381,7 +381,7 @@ $app->post('/Home', function () use ($app) {
 
  /* *
  * URL: http://13.233.187.243/api/v1/Lectureslist
- * Parameters: authtoken, subject_id
+ * Parameters: authtoken, topic_id
  * Method: POST
  * */
 $app->post('/Lectureslist', function () use ($app) {
@@ -414,114 +414,6 @@ $app->post('/Lectureslist', function () use ($app) {
         echoResponse(200, $response);
     } 
 });
-
-
-/* *
- * URL: http://13.233.187.243/api/v1/Chapterlist
- * Parameters: authtoken, subject_id
- * Method: POST
- * */
-$app->post('/Chapterlist', function () use ($app) {
-    verifyRequiredParams(array('authtoken', 'subject_id'));
-    $response = array();
-    $authtoken = $app->request->post('authtoken');
-    $topic_id = $app->request->post('subject_id');
-    $db = new DbOperation();
-    $res = $db->chapterlist($authtoken, $topic_id);
-    $result = $res[0];
-    
-    $response['Activeongoogleplay'] = Activeongoogleplay;
-    if ($result == 0) {
-        $response["Error"] = false;
-        $response["Status"] = 1;
-        $response["Message"] = "Auth token successfully matched";
-        $response["Payload"] = $res[1];
-        echoResponse(201, $response);
-    } else if ($result == 1) {
-        $response["Error"] = true;
-        $response["Status"] = 0;
-        $response["Message"] = "Auth token not matched";
-        $response['Payload'] = array();
-        echoResponse(200, $response);
-    } else if ($result == 2) {
-        $response["Error"] = true;
-        $response["Status"] = 0;
-        $response["Message"] = "Student not subscribed the subject";
-        $response['Payload'] = array();
-        echoResponse(200, $response);
-    } 
-});
-
- /* 
- * URL: http://13.233.187.243/api/v1/SubjectdetailsNew
- * Parameters: authtoken, subject_id
- * Method: POST
- * */
-$app->post('/SubjectdetailsNew', function () use ($app) {
-    verifyRequiredParams(array('authtoken', 'subject_id'));
-    $response = array();
-    $authtoken = $app->request->post('authtoken');
-    $topic_id = $app->request->post('subject_id');
-    $db = new DbOperation();	
-    $res = $db->subjectdetailsnew($authtoken, $topic_id);
-    $result = $res[0];
-    $response['Activeongoogleplay'] = Activeongoogleplay;
-    if ($result == 0) {
-        $response["Error"] = false;
-        $response["Status"] = 1;
-        $response["Message"] = "Auth token successfully matched";
-        $response["Payload"] = $res[1];
-        echoResponse(201, $response);
-    } else if ($result == 1) {
-        $response["Error"] = true;
-        $response["Status"] = 0;
-        $response["Message"] = "Auth token not matched";
-        $response['Payload'] = array();
-        echoResponse(200, $response);
-    } else if ($result == 2) {
-        $response["Error"] = true;
-        $response["Status"] = 0;
-        $response["Message"] = "Student not subscribed the subject";
-        $response['Payload'] = array();
-        echoResponse(200, $response);
-    } 
-});
-
-/* 
- * URL: http://13.233.187.243/api/v1/CategoryDetails
- * Parameters: authtoken, category_name
- * Method: POST
- * */
-$app->post('/CategoryDetails', function () use ($app) {
-    verifyRequiredParams(array('authtoken', 'category_name'));
-    $response = array();
-    $authtoken = $app->request->post('authtoken');
-    $category_name = $app->request->post('category_name');
-    $db = new DbOperation();	
-    $res = $db->categorydetails($authtoken, $category_name);
-    $result = $res[0];
-    $response['Activeongoogleplay'] = Activeongoogleplay;
-    if ($result == 0) {
-        $response["Error"] = false;
-        $response["Status"] = 1;
-        $response["Message"] = "Auth token successfully matched";
-        $response["Payload"] = $res[1];
-        echoResponse(201, $response);
-    } else if ($result == 1) {
-        $response["Error"] = true;
-        $response["Status"] = 0;
-        $response["Message"] = "Auth token not matched";
-        $response['Payload'] = array();
-        echoResponse(200, $response);
-    } else if ($result == 2) {
-        $response["Error"] = true;
-        $response["Status"] = 0;
-        $response["Message"] = "Student not subscribed the subject";
-        $response['Payload'] = array();
-        echoResponse(200, $response);
-    } 
-});
-
 
  /* *
  * URL: http://13.233.187.243/api/v1/Topicdetails

@@ -768,59 +768,7 @@ public function home($authtoken){
         $stmt->execute();
 
         $subscription = $stmt->get_result()->fetch_assoc();
-        //echo "<pre>";print_r($subscription);exit;
-		if(!empty($subscription)){
-        $cattype = 0;
-        $stmt = $this->con->prepare("SELECT subject_id,video_category as category from lecture_videos WHERE subject_id = ? AND video_type = ? AND status = ? GROUP BY(video_category) LIMIT 10");
-        $stmt->bind_param("sss",$topic_id,$cattype,$status);
-        $stmt->execute();
-        $catlist = $stmt->get_result();
-        $categories = mysqli_fetch_all ($catlist, MYSQLI_ASSOC);
-        foreach($categories as $catelement){
-        $videotype = 0;
-        $vct = " ";
-        $stmt = $this->con->prepare("SELECT video_title,id as video_id from lecture_videos WHERE subject_id = ? AND video_type = ? AND status = ? AND video_category = ? AND video_category <> ? LIMIT 10");
-        $stmt->bind_param("iiiss",$catelement['subject_id'],$videotype,$status, $catelement['category'], $vct);
-
-        $stmt->execute();
-        $videolist = $stmt->get_result();
-        $videos['video'] = mysqli_fetch_all ($videolist, MYSQLI_ASSOC);
-        if(!empty($catelement['category'])){
-        $catglist = array('category_name' => $catelement['category']);
-        $newone[] = array_merge($catglist, $videos);
-        }else{
-        $catglist = array('category_name' => 'Not Found!');
-        $vi = array('video_title' => 'Not Aviable!', 'video_id' => 0);
-        $newone[] = array_merge($catglist, $videos);
-        }
-        }
-        return array(0,$newone);
-
-        }else{
-        return array(2);
-        }
-        }
-        else{
-            return array(1);
-            }
-       
-       
-    }
-	
-	
-	public function chapterlist($authtoken,$topic_id){
-        $status = 1;
-        $auth = $this->istokenexists($authtoken);
-        if (!empty($auth)) { 
-        $student_id = $auth['student_id'];
-        $status = 1;        
-        $stmt = $this->con->prepare("SELECT * from subscription_details WHERE subject_id = ? AND student_id = ? AND status = ?");
-        $stmt->bind_param("sss",$topic_id,$student_id,$status);
-        $stmt->execute();
-
-        $subscription = $stmt->get_result()->fetch_assoc();
-        //echo "<pre>";print_r($subscription);exit;
-		if(!empty($subscription)){
+        if(!empty($subscription)){
         $cattype = 0;
         $stmt = $this->con->prepare("SELECT subject_id,video_category as category from lecture_videos WHERE subject_id = ? AND video_type = ? AND status = ? GROUP BY(video_category) LIMIT 10");
         $stmt->bind_param("sss",$topic_id,$cattype,$status);
@@ -872,8 +820,8 @@ public function home($authtoken){
         }
         }
       
-	  
-	    public function subjectdetails($authtoken,$topic_id){
+
+    public function subjectdetails($authtoken,$topic_id){
         $response = array();
         $status = 1;
         $auth = $this->istokenexists($authtoken);
@@ -916,9 +864,8 @@ public function home($authtoken){
         }
 
         if(!empty($about['image'])){
-        //$subjectimage = SITEURL.'admin/assets/images/subjects/'.$about['image'];    
-        $subjectimage = 'http://localhost/medivarsity/admin/assets/images/subjects/'.$about['image'];  
-		}else{
+        $subjectimage = SITEURL.'admin/assets/images/subjects/'.$about['image'];    
+        }else{
         $subjectimage = '';     
         }
 
@@ -966,129 +913,6 @@ public function home($authtoken){
           }
         }
 
-
-    public function subjectdetailsnew($authtoken,$topic_id){
-        $response = array();
-        $status = 1;
-        $auth = $this->istokenexists($authtoken);
-        if (!empty($auth)) { 
-        $student_id = $auth['student_id'];  
-        $status = 1;        
-        $stmt = $this->con->prepare("SELECT * from subscription_details WHERE subject_id = ? AND student_id = ? AND status = ?");
-        $stmt->bind_param("sss",$topic_id,$student_id,$status);
-        $stmt->execute();
-        $subscription = $stmt->get_result()->fetch_assoc();
-		//echo "<pre>";print_r($subscription);exit;
-		
-        if(!empty($subscription)){
-        if($subscription['hours_remaining'] == 0){
-        $sub = 0; 
-        $remaininghours = $subscription['hours_remaining'];   
-        }else{ 
-        $sub = 1; 
-        $remaininghours = $subscription['hours_remaining'];
-        }   
-        }else{
-        $sub = 0; 
-        $remaininghours = 0;    
-        }
-        $subscription['subscription_details'] = array('subscription' => $sub,'remaining_hours' => $remaininghours);
-        $stmt = $this->con->prepare("SELECT sm.*,sd.* from subject_master as sm 
-        LEFT JOIN subject_details as sd  ON sd.subject_id = sm.id 
-        WHERE sm.id = ?");
-        $stmt->bind_param("s",$topic_id);
-        $stmt->execute();
-        $about = $stmt->get_result()->fetch_assoc();
-		//echo "<pre>";print_r($about);exit;
-        if(!empty($about['subject_description'])){
-        $subjectdescription = strip_tags($about['subject_description']);    
-        }else{
-        $subjectdescription = '';     
-        }
-
-        if(!empty($about['subject_features'])){
-        $subjectfeatures = $about['subject_features'];    
-        }else{
-        $subjectfeatures = '';     
-        }
-
-        if(!empty($about['image'])){
-        //$subjectimage = SITEURL.'admin/assets/images/subjects/'.$about['image'];    
-        $subjectimage = 'http://localhost/medivarsity/admin/assets/images/subjects/'.$about['image'];    
-        }else{
-        $subjectimage = '';     
-        }
-
-        if(!empty($about['price'])){
-        $subjectprice = $about['price'];    
-        }else{
-        $subjectprice = '';     
-        }
-        foreach($about as $about);
-        $subjectdetails['subjectdetails'] = array('subject_description' => $subjectdescription,
-        'subject_features' => $subjectfeatures,
-        'subject_image' => $subjectimage,
-        'subject_price' => $subjectprice
-        );
-       
-	      $stmt = $this->con->prepare("SELECT rv.review,rv.rating,lv.video_title,mr.name as reviwername,mr.email as revieweremail,mr.image_url as reviwerimageurl from reviews as rv 
-        LEFT JOIN lecture_videos as lv  ON lv.id = rv.video_id 
-        LEFT JOIN medi_registered_students as mr ON mr.student_id = rv.student_id 
-        WHERE rv.status = 1 AND rv.subject_id = ? ORDER BY rv.id DESC");
-        $stmt->bind_param("s", $topic_id);
-        $stmt->execute();
-        $reviewlist = $stmt->get_result();
-        $reviews['reviews'] = mysqli_fetch_all ($reviewlist, MYSQLI_ASSOC);
-
-        $stmt = $this->con->prepare("SELECT id as test_id,test_name from test WHERE subject_id = ? AND status = ?");
-        $stmt->bind_param("ss",$topic_id,$status);
-        $stmt->execute();
-        $testlist = $stmt->get_result();
-        $test['test'] = mysqli_fetch_all ($testlist, MYSQLI_ASSOC);
- 
-		if(!empty($subjectdetails)){
-        $cattype = 0;
-        $stmt = $this->con->prepare("SELECT video_category as category from lecture_videos WHERE subject_id = ? AND video_type = ? AND status = ? GROUP BY(video_category) LIMIT 10");
-        $stmt->bind_param("sss",$topic_id,$cattype,$status);
-        $stmt->execute();
-        $catlist = $stmt->get_result();
-        $categories['categories'] = mysqli_fetch_all ($catlist, MYSQLI_ASSOC);
-		    //print_r($categories);exit;
-        $response = array_merge($subjectdetails,$subscription,$categories,$reviews,$test);
-        
-		return array(0, $response);
-        }else{
-        return array(2);
-        }
-		}
-        }
-		
-		
-		
-		public function categorydetails($authtoken,$category_name){
-        $response = array();
-        $status = 1;
-        $auth = $this->istokenexists($authtoken);
-        if (!empty($auth)) { 
-		
-        $student_id = $auth['student_id']; 
-			//echo $category_name;exit;
-        $status = 1;        
-        $stmt = $this->con->prepare("SELECT * from lecture_videos WHERE video_category = ? ");
-        $stmt->bind_param("s",$category_name);
-        $stmt->execute();
-        $categorydetails = $stmt->get_result();
-		    $category_video[] = mysqli_fetch_all ($categorydetails, MYSQLI_ASSOC);
-				return array(0, $category_video);
-        }else{
-        return array(2);
-        }
-		
-        }
- 
-		
-		
-        
       public function updatesubscriptionhours($authtoken,$topic_id,$remaininghours){
         $response = array();
         $status = 1;

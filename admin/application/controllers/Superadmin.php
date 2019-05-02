@@ -71,7 +71,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 			$this->session->set_userdata(array('id'=>$data['id'],'data'=>$data));
 			redirect('Medivarsity_faculty/index');
 			}
-		}else{
+			}else{
 			$this->session->set_flashdata('login_error', 'Invalid User Name or Password. Please try again');
 			redirect('Medivarsity/login_pg?sid=1');
 		}

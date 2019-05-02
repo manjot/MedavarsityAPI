@@ -65,7 +65,7 @@
 			<span id="errorpass"></span>
 		</div>
 		<div class="form-actions">
-           <a href="<?php echo base_url();?>forgotpassword" style="color: #e1eef7; class="forget-password">Forgot Password</a>
+           <a href="<?php echo base_url();?>forgotpassword" style="color: #e1eef7;" class="forget-password">Forgot Password</a>
 			<button type="submit" class="btn blue pull-right btn-login">
 			Login <i class="m-icon-swapright m-icon-white"></i>
 			</button>
